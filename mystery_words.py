@@ -1,3 +1,4 @@
+import random
 
 def get_word_lists(file):
   easy_words = []
@@ -26,13 +27,16 @@ def get_difficulty(easy_words, medium_words, hard_words):
     print("Please choose a valid difficulty level...")
     get_difficulty(easy_words, medium_words, hard_words)
     
+
+    
+def game(word_pool):
+  solution = random.choice(word_pool)
+  print(solution)
+  return
+
 def main():
   easy, medium, hard = get_word_lists('words.txt')
-  game(get_difficulty(easy, medium, hard))
+  while True:
+    game(get_difficulty(easy, medium, hard))
   
-
-  
-def game(word_pool):
-  pass
-
 main()  
