@@ -1,6 +1,13 @@
 import random
+import re
 
+regex = re.compile('^[A-Za-z]$')
+first_play = True
 def get_word_lists(file):
+  """ Takes a txt file as an argument, assuming that each line contains a word. Then strips those words of 
+  newlines and sorts them into word pools for the different difficulties, returning a tuple that contains:
+  (easy words, medium words, hard words)"""
+  
   easy_words = []
   medium_words = []
   hard_words = []
@@ -16,7 +23,10 @@ def get_word_lists(file):
   return(easy_words, medium_words, hard_words)
   
 def get_difficulty(easy_words, medium_words, hard_words):
-  choice = input("Welcome to Mystery Words! Please Select a Difficulty (Easy, Medium, Hard): ").lower()
+  """Takes the word pools for their respective difficulties as arguments, and prompts the user to choose
+  which difficulty they would like to play the game on. Then returns the appropriate list of words"""
+  
+  choice = input("Please Select a Difficulty (Easy, Medium, Hard): ").lower()
   if choice == "easy":
     return easy_words
   elif choice == "medium":
@@ -25,18 +35,54 @@ def get_difficulty(easy_words, medium_words, hard_words):
     return hard_words
   else:
     print("Please choose a valid difficulty level...")
-    get_difficulty(easy_words, medium_words, hard_words)
+    return get_difficulty(easy_words, medium_words, hard_words)
     
-
+def prompt_play():
+  """Asks the user if they would like to play. Returns 'y' or 'n' if input is valid, else prompts again."""
+  response = input("Would you like to play a game?? (y/n) : ").lower()
+  if response !='y' and response != 'n':
+    print("I didn't understand that. Please enter (y/n)")
+    return prompt_play()
+  else:
+    return response
     
 def game(word_pool):
   solution = random.choice(word_pool)
-  print(solution)
-  return
-
-def main():
-  easy, medium, hard = get_word_lists('words.txt')
-  while True:
-    game(get_difficulty(easy, medium, hard))
+  print(f"Your word has {len(solution)} letters")
+  guesses_left = 8
+  guesses = []
+  progress = "_"*len(solution)
+  while guesses_left > 0:
+    if progress == solution:
+      print(f"You Win!! The word was {solution}")
+      return
+    if len(guesses) > 0:
+      print(f"Letters guessed so far: {' '.join(guesses)}")
+    print(f"You've got {guesses_left} guesses remaining!")
+    print(' '.join(progress))
+    guess = input("Please guess a letter: ").lower()
+    if regex.match(guess):
+      if guess not in guesses:
+        guesses.append(guess)
+        guesses = sorted(guesses)
+        if guess in solution:
+          print('Nice Guess!')
+          progress = ''.join([letter if letter in guesses else '_' for letter in solution])
+        else:
+          guesses_left -= 1
+    else :
+      print("Please enter a valid letter!")
+  print(f"You Lose!! The word was: {solution}")
   
-main()  
+
+def main(words_file):
+  easy, medium, hard = get_word_lists(words_file)
+  print("Welcome to Mystery Words!!")
+  while True:
+    response = prompt_play()
+    if response == 'y':
+      game(get_difficulty(easy, medium, hard))
+    else:
+      break
+  
+main('words.txt') 
