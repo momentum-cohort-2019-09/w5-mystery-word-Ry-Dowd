@@ -13,7 +13,26 @@ def get_word_lists(file):
       if 8 <= len(word):
         hard_words.append(word)
   return(easy_words, medium_words, hard_words)
+  
+def get_difficulty(easy_words, medium_words, hard_words):
+  choice = input("Welcome to Mystery Words! Please Select a Difficulty (Easy, Medium, Hard): ").lower()
+  if choice == "easy":
+    return easy_words
+  elif choice == "medium":
+    return medium_words
+  elif choice == "hard":
+    return hard_words
+  else:
+    print("Please choose a valid difficulty level...")
+    get_difficulty(easy_words, medium_words, hard_words)
     
 def main():
-  easy_words, medium_words, hard_words = get_word_lists('words.txt')
-  input
+  easy, medium, hard = get_word_lists('words.txt')
+  game(get_difficulty(easy, medium, hard))
+  
+
+  
+def game(word_pool):
+  pass
+
+main()  
