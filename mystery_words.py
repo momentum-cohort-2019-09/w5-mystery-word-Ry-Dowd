@@ -87,28 +87,49 @@ def main(words_file):
   
 main('words.txt') 
 
-def evil_deep_compare(letter, list_without_letter, count_lists, length):
+def 
+
+def evil_deep_compare(letter, base_case, possibilities_dict, length):
+  """Takes the user's guess, the list of words without that guess, and a dictionary whose keys
+  correspond to lists of words with a letter count of 'key' that can possibly be bigger than
+  our base case"""
+  
   pass
 
 
 def evil_comparison(letter, list_without_letter, list_with_letter, length):
+  """First level deeper comparison. Takes the user's guess, the list of words that contain that guess,
+  the list of words that don't contain that guess, and the length of the word to help curtail unnecessary
+  processing. If a deeper comparison is needed, calls the appropriate function, otherwise returns the list
+  of options that don't contain the guess."""
+  
   base_case = list_without_letter
   most_options = len(base_case)
-  letter_count_lists = [[]for i in range(length)]
+  letter_count_lists = [[]for _ in range(length)]
+  deep_necessary = False
   for word in list_with_letter:
     for i in range(length):
       if word.count(letter) == i + 1:
         letter_count_lists[i].append(word)
-  for i in letter_count_lists:
-    if len(i) > most_options:
+  possibilities_dict = {}
+  for count_list in letter_count_lists:
+    if len(count_list) > most_options:
       deep_necessary = True
+      possibilities_dict[i+1] = count_list
   if deep_necessary == True:
-    return evil_deep_compare(letter, list_without_letter, letter_count_lists, length)
+    return evil_deep_compare(letter, list_without_letter, possibilities_dict, length)
+  else:
+    return list_without_letter
   
   
   
 
-def evil_filter(guess, word_pool):
+def evil_filter(guess, word_pool, length):
+  """Takes the user's guess, the existing word pool, and length of the solution.
+  Compares words that contain the guess and words that don't compare the guess.
+  If words without is larger, return it. Otherwise, return the result of a deeper
+  comparison"""
+  
   words_without_guess = []
   words_with_guess= []
   for word in word_pool:
@@ -119,4 +140,4 @@ def evil_filter(guess, word_pool):
   if len(words_without_guess) > len (words_with_guess):
     return words_without_guess
   else:
-    return evil_comparison(guess, words_without_guess, words_with_guess)
+    return evil_comparison(guess, words_without_guess, words_with_guess, length)
