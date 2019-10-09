@@ -86,3 +86,37 @@ def main(words_file):
       break
   
 main('words.txt') 
+
+def evil_deep_compare(letter, list_without_letter, count_lists, length):
+  pass
+
+
+def evil_comparison(letter, list_without_letter, list_with_letter, length):
+  base_case = list_without_letter
+  most_options = len(base_case)
+  letter_count_lists = [[]for i in range(length)]
+  for word in list_with_letter:
+    for i in range(length):
+      if word.count(letter) == i + 1:
+        letter_count_lists[i].append(word)
+  for i in letter_count_lists:
+    if len(i) > most_options:
+      deep_necessary = True
+  if deep_necessary == True:
+    return evil_deep_compare(letter, list_without_letter, letter_count_lists, length)
+  
+  
+  
+
+def evil_filter(guess, word_pool):
+  words_without_guess = []
+  words_with_guess= []
+  for word in word_pool:
+    if guess in word:
+      words_with_guess.append(word)
+    else:
+      words_without_guess.append(word)
+  if len(words_without_guess) > len (words_with_guess):
+    return words_without_guess
+  else:
+    return evil_comparison(guess, words_without_guess, words_with_guess)
