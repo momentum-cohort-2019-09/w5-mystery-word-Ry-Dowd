@@ -48,12 +48,14 @@ def prompt_play():
     
 def game(word_pool):
   solution = random.choice(word_pool)
+  length = len(solution)
   print(f"Your word has {len(solution)} letters")
   guesses_left = 8
   guesses = []
   progress = "_"*len(solution)
+  word_pool = word_pool
   while guesses_left > 0:
-    if progress == solution:
+    if word_pool[0]:
       print(f"You Win!! The word was {solution}")
       return
     if len(guesses) > 0:
@@ -87,12 +89,17 @@ def main(words_file):
   
 main('words.txt') 
 
-def(split_families)
+def split_families(letter, list, count):
+  possibilities = []
+  return possibilities
 
 def examine_dictionary(letter, base_case, possibilities_list, letter_count, word_length):
   """Continues reducing down the dictionary, examining the number of possibilities based off of letter
   position. Returns a new base case if found, otherwise keeps our old base case."""
   possibilities = split_families(letter, possibilities_list, letter_count)
+  for possibility in possibilities:
+    if len(possibility) > len(base_case):
+      base_case = possibility
   return base_case
 
 
