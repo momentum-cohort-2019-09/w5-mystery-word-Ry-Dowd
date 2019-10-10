@@ -122,7 +122,7 @@ def two_letter_split(letter, base_case, word_list, length):
   pool = word_list
   best = base_case
   for first in range(length-1):
-    for second in range(first, length):
+    for second in range(first+1, length):
       current_check = []
       remaining_pool = []
       for word in pool:
@@ -141,8 +141,35 @@ def two_letter_split(letter, base_case, word_list, length):
         return best
       pool = remaining_pool
     
-      
-
+def three_letter_split(letter, base_case, word_list, length):
+  print("inside three letter analysis")
+  print('======')
+  pool = word_list
+  best = base_case
+  for first in range(length-2):
+    for second in range(first+1, length-1):
+      for third in range(second+1, length):
+        current_check = []
+        remaining_pool = []
+        for word in pool:
+          if word[first] != letter:
+            remaining_pool.append(word)
+          else:
+            if word[second] != letter:
+              remaining_pool.append(word)
+            else:
+              if word[third] != letter:
+                remaining_pool.append(word)
+              else:
+                current_check.append(word)
+        print(best, current_check, remaining_pool)
+        if len(current_check) > len(best):
+          best = current_check
+        if len(best) > len (remaining_pool):
+          print(best)
+          return best
+        pool = remaining_pool
+    
 
 def evil_deep_compare(letter, base_case, possibilities_dict, word_length):
   """Takes the user's guess, the list of words without that guess, and a dictionary whose keys
