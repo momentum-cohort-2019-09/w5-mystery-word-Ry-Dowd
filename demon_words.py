@@ -94,46 +94,68 @@ def main(words_file):
       break
   
 
-def split_families(letter, word_list, count):
-  print(word_list)
-  possibilities = []
-  if count > 1:
-    print("oh fuck")
-  return possibilities
 
-def examine_dictionary(letter, base_case, possibilities_list, letter_count, word_length):
-  """Continues reducing down the dictionary, examining the number of possibilities based off of letter
-  position. Returns a new base case if found, otherwise keeps our old base case."""
-  possibilities = split_families(letter, possibilities_list, letter_count)
-  for possibility in possibilities:
-    if len(possibility) > len(base_case):
-      base_case = possibility
-  return base_case
+def one_letter_split(letter, base_case, word_list, length):
+  if len(word_list) <=1:
+    return base_case
+  pool = word_list
+  best = base_case
+  for i in range(length):
+    current_check = []
+    remaining_pool = []
+    for word in pool:
+      if word[i] == letter:
+        current_check.append(word)
+      else:
+        remaining_pool.append(word)
+    print(current_check)
+    print(remaining_pool)
+    if len(current_check) > len(best):
+      best = current_check
+    if len(best) > len (remaining_pool):
+      return best
+    pool = remaining_pool
+
+def two_letter_split(letter, base_case, word_list, length):
+  print("inside two letter analysis")
+  print('======')
+  pool = word_list
+  best = base_case
+  for first in range(length-1):
+    for second in range(first, length):
+      current_check = []
+      remaining_pool = []
+      for word in pool:
+        if word[first] != letter:
+          remaining_pool.append(word)
+        else:
+          if word[second] == letter:
+            current_check.append(word)
+          else:
+            remaining_pool.append(word)
+      print(best, current_check, remaining_pool)
+      if len(current_check) > len(best):
+        best = current_check
+      if len(best) > len (remaining_pool):
+        print(best)
+        return best
+      pool = remaining_pool
+    
+      
 
 
-def evil_deep_compare(letter, base_case, possibilities, word_length):
+def evil_deep_compare(letter, base_case, possibilities_dict, word_length):
   """Takes the user's guess, the list of words without that guess, and a dictionary whose keys
   correspond to lists of words with a letter count of 'key' that can possibly be bigger than
   our base case"""
   # for item in possibilities_dict.items():
   #   base_case = examine_dictionary(letter, base_case, item[1], item[0], word_length)
   # return base_case
+  print(base_case, possibilities_dict)
+  best = one_letter_split(letter, base_case, possibilities_dict['1'], word_length)
+  best = two_letter_split(letter, best, possibilities_dict.get('2', []), word_length)
+  return best
   
-  possibilities = possibilities
-  print(possibilities)
-  for i in range(word_length):
-    current_check = []
-    remaining_pool = []
-    for word in possibilities:
-      if word[i] == letter:
-        current_check.append(word)
-      else:
-        remaining_pool.append(word)
-    if len(current_check) > len(base_case):
-      base_case = current_check
-    if len(base_case) > len (remaining_pool):
-      return base_case
-    possibilities = remaining_pool
       
   
 
@@ -146,19 +168,17 @@ def evil_comparison(letter, list_without_letter, list_with_letter, word_length):
   
   base_case = list_without_letter
   most_options = len(base_case)
-  letter_count_lists = [[]for _ in range(word_length)]
   deep_necessary = False
+  possibilities_dict = {'1':[], '2':[], '3':[], '4':[]}
   for word in list_with_letter:
-    for i in range(word_length):
+    for i in range(4):
       if word.count(letter) == i + 1:
-        letter_count_lists[i].append(word)
-  # possibilities_dict = {}
-  # for count_list in letter_count_lists:
-  #   if len(count_list) > most_options:
-  #     deep_necessary = True
-  #     possibilities_dict[i+1] = count_list
-  # if deep_necessary == True:
-    return evil_deep_compare(letter, list_without_letter, letter_count_lists[0], word_length)
+        possibilities_dict[f"{i+1}"].append(word)
+  for item in possibilities_dict.items():
+    if len(item[1]) > most_options:
+      deep_necessary = True
+  if deep_necessary == True:
+    return evil_deep_compare(letter, list_without_letter, possibilities_dict, word_length)
   else:
     return list_without_letter
   
