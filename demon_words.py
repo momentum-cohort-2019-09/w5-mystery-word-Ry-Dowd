@@ -50,7 +50,7 @@ def game(word_pool):
   solution = random.choice(word_pool)
   length = len(solution)
   print(f"Your word has {length} letters")
-  guesses_left = 8
+  guesses_left = 15
   guesses = []
   progress = "_"*length
   word_pool = [word for word in word_pool if len(word)==length]
@@ -77,10 +77,9 @@ def game(word_pool):
           progress = updated_progress
         else:
           print("NOPE")
-          # guesses_left -= 1
+          guesses_left -= 1
     else:
       print("Please enter a valid letter!")
-    # if solution, you win!
   
 
 def main(words_file):
@@ -108,8 +107,6 @@ def one_letter_split(letter, base_case, word_list, length):
         current_check.append(word)
       else:
         remaining_pool.append(word)
-    print(current_check)
-    print(remaining_pool)
     if len(current_check) > len(best):
       best = current_check
     if len(best) > len (remaining_pool):
@@ -146,6 +143,8 @@ def three_letter_split(letter, base_case, word_list, length):
   print('======')
   pool = word_list
   best = base_case
+  if len(best)>len(word_list):
+    return best
   for first in range(length-2):
     for second in range(first+1, length-1):
       for third in range(second+1, length):
@@ -169,6 +168,41 @@ def three_letter_split(letter, base_case, word_list, length):
           print(best)
           return best
         pool = remaining_pool
+        
+def four_letter_split(letter, base_case, word_list, length):
+  print("inside four letter analysis")
+  print('======')
+  pool = word_list
+  best = base_case
+  if len(best)>len(word_list):
+    return best
+  for first in range(length-3):
+    for second in range(first+1, length-2):
+      for third in range(second+1, length-1):
+        for fourth in range(third+1, length):
+          current_check = []
+          remaining_pool = []
+          for word in pool:
+            if word[first] != letter:
+              remaining_pool.append(word)
+            else:
+              if word[second] != letter:
+                remaining_pool.append(word)
+              else:
+                if word[third] != letter:
+                  remaining_pool.append(word)
+                else:
+                  if word[fourth] != letter:
+                    remaining_pool.append(word)
+                  else:
+                    current_check.append(word)
+          print(best, current_check, remaining_pool)
+          if len(current_check) > len(best):
+            best = current_check
+          if len(best) > len (remaining_pool):
+            print(best)
+            return best
+          pool = remaining_pool
     
 
 def evil_deep_compare(letter, base_case, possibilities_dict, word_length):
@@ -179,8 +213,10 @@ def evil_deep_compare(letter, base_case, possibilities_dict, word_length):
   #   base_case = examine_dictionary(letter, base_case, item[1], item[0], word_length)
   # return base_case
   print(base_case, possibilities_dict)
-  best = one_letter_split(letter, base_case, possibilities_dict['1'], word_length)
+  best = one_letter_split(letter, base_case, possibilities_dict.get('1', []), word_length)
   best = two_letter_split(letter, best, possibilities_dict.get('2', []), word_length)
+  best = three_letter_split(letter, best, possibilities_dict.get('3', []), word_length)
+  best = four_letter_split(letter, best, possibilities_dict.get('4',[]), word_length)
   return best
   
       
