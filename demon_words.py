@@ -80,6 +80,7 @@ def game(word_pool):
           guesses_left -= 1
     else:
       print("Please enter a valid letter!")
+  print(f"You lose!!!!! The word was {word_pool[0]}")
   
 
 def main(words_file):
@@ -95,8 +96,8 @@ def main(words_file):
 
 
 def one_letter_split(letter, base_case, word_list, length):
-  if len(word_list) <=1:
-    return base_case
+  print("Inside one letter analysis")
+  print("======")
   pool = word_list
   best = base_case
   for i in range(length):
@@ -130,11 +131,9 @@ def two_letter_split(letter, base_case, word_list, length):
             current_check.append(word)
           else:
             remaining_pool.append(word)
-      print(best, current_check, remaining_pool)
       if len(current_check) > len(best):
         best = current_check
       if len(best) > len (remaining_pool):
-        print(best)
         return best
       pool = remaining_pool
     
@@ -161,11 +160,9 @@ def three_letter_split(letter, base_case, word_list, length):
                 remaining_pool.append(word)
               else:
                 current_check.append(word)
-        print(best, current_check, remaining_pool)
         if len(current_check) > len(best):
           best = current_check
         if len(best) > len (remaining_pool):
-          print(best)
           return best
         pool = remaining_pool
         
@@ -196,11 +193,9 @@ def four_letter_split(letter, base_case, word_list, length):
                     remaining_pool.append(word)
                   else:
                     current_check.append(word)
-          print(best, current_check, remaining_pool)
           if len(current_check) > len(best):
             best = current_check
           if len(best) > len (remaining_pool):
-            print(best)
             return best
           pool = remaining_pool
     
@@ -212,7 +207,6 @@ def evil_deep_compare(letter, base_case, possibilities_dict, word_length):
   # for item in possibilities_dict.items():
   #   base_case = examine_dictionary(letter, base_case, item[1], item[0], word_length)
   # return base_case
-  print(base_case, possibilities_dict)
   best = one_letter_split(letter, base_case, possibilities_dict.get('1', []), word_length)
   best = two_letter_split(letter, best, possibilities_dict.get('2', []), word_length)
   best = three_letter_split(letter, best, possibilities_dict.get('3', []), word_length)
